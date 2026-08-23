@@ -1,0 +1,71 @@
+const navbar = document.querySelector(".navbar");
+const menuToggle = document.getElementById("menuToggle");
+const navMenu = document.getElementById("navMenu");
+const navLinks = document.querySelectorAll(".nav-menu a");
+
+// Navbar berubah saat scroll
+window.addEventListener("scroll", () => {
+  if (window.scrollY > 30) {
+    navbar?.classList.add("scrolled");
+  } else {
+    navbar?.classList.remove("scrolled");
+  }
+});
+
+// Mobile menu
+if (menuToggle && navMenu) {
+  menuToggle.addEventListener("click", () => {
+    const isOpen = menuToggle.classList.toggle("active");
+
+    navMenu.classList.toggle("active");
+    document.body.classList.toggle("menu-open");
+
+    menuToggle.setAttribute(
+      "aria-expanded",
+      isOpen ? "true" : "false"
+    );
+  });
+}
+
+// Tutup mobile menu setelah menu dipilih
+navLinks.forEach((link) => {
+  link.addEventListener("click", () => {
+    menuToggle?.classList.remove("active");
+    navMenu?.classList.remove("active");
+
+    document.body.classList.remove("menu-open");
+
+    menuToggle?.setAttribute(
+      "aria-expanded",
+      "false"
+    );
+  });
+});
+
+// Animasi muncul saat scroll
+const revealItems = document.querySelectorAll(".reveal");
+
+if ("IntersectionObserver" in window) {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("active");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      threshold: 0.12
+    }
+  );
+
+  revealItems.forEach((item) => {
+    observer.observe(item);
+  });
+} else {
+  // Fallback untuk browser lama
+  revealItems.forEach((item) => {
+    item.classList.add("active");
+  });
+}
